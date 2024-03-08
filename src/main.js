@@ -8,15 +8,13 @@ import { createGallery } from './js/render-functions.js';
 import { findImage } from './js/pixabay-api.js';
 
 const FORM = document.querySelector('.form');
-
 const gallery = document.querySelector('.gallery');
-// const loader = document.querySelector('.loader');
+const loader = document.querySelector('.loader');
 
 let galleryLightbox = new SimpleLightbox('.gallery div ', {
   captionsData: 'alt',
   captionDelay: 250,
 });
-
 
 FORM.addEventListener('submit', processSearch);
 
@@ -26,17 +24,25 @@ function processSearch(event) {
   const FORM = event.currentTarget;
   const QUERY = FORM.elements.query.value.trim();
 
+  loader.textContent = 'Loading images, please wait...'
+  loader.style.display = 'flex';
+
   if (QUERY === '') {
-    return iziToast.error({
+     iziToast.error({
       message:
         'Sorry, there are no images matching your search query. Please try again!',
       messageColor: '#FFFFFF',
-      timeout : 4000,
-      position : 'topRight',
-    });
+      timeout: 4000,
+      position: 'topRight',
+      
+    })
+    
+    setTimeout(() => loader.style.display = 'none',1000)
+    return
   }
 
-  findImage(QUERY)
+  const interval = setTimeout(() => {
+    findImage(QUERY)
     .then(arr => {
       gallery.innerHTML = createGallery(arr);
       FORM.reset();
@@ -45,4 +51,7 @@ function processSearch(event) {
     .catch(error => {
       console.error('Error:', error);
     });
+  },2000);
+  
+
 }
