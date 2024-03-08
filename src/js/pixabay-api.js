@@ -1,4 +1,5 @@
-
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 
 const KEY = '42701806-8f4bc33de61eec272077c73af';
 const URL = 'https://pixabay.com/api/';
@@ -14,9 +15,13 @@ export function findImage(QUERY) {
     })
     .then(data => {
       if (data.hits.length === 0) {
-        console.log(
-          'Sorry, there are no images matching your search query. Please try again!'
-        );
+        return iziToast.error({
+          message:
+            'Sorry, there are no images matching your search query. Please try again!',
+          messageColor: '#FFFFFF',
+          timeout : 4000,
+          position : 'topRight',
+        });
       }
       return data;
     })
